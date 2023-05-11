@@ -32,6 +32,23 @@ def take_one_hour():
     print(num)
 
 
+def take_there_hour():   # 7417935
+    path = '/data/WorkMind/data/student/d/Save_data.txt'
+    save_path = '/data/WorkMind/data/student/d/6_9.txt'
+
+    f = open(path, 'r').readlines()
+    num = 0
+    # id = '8617292022147'
+    ff = open(save_path, 'w')
+    for i in f:
+        car = i.split(',')
+        #  3600 * 2   = 7200
+        if 1569232800 <= int(car[6]) <= 1569243600:
+            ff.write(i)
+            num += 1
+    print(num)
+
+
 def t():
     print(time.time())
     # ti = time.time()
@@ -242,6 +259,24 @@ def make_all_od_4():
     print('统计完成，总共：', num)
 
 
+def del_wrong():
+    path = '/data/WorkMind/data/student/d/all_od_4.txt'
+    save_path = '/data/WorkMind/data/student/d/od_right.txt'
+
+    f = open(path, 'r').readlines()
+    ff = open(save_path, 'w')
+    num = 0
+    print('总共：', len(f))
+    # 115.416827  117.508251    and     39.442078  41.058964
+    for i in f:
+        car = i.split(',')
+        if not (115.416827 < float(car[2]) < 117.508251 and 115.416827 < float(
+                car[5]) < 117.508251 and 39.442078 < float(car[3]) < 41.058964 and 39.442078 < float(
+                car[6]) < 41.058964):
+            num += 1
+    print(num)
+
+
 if __name__ == '__main__':
     # r_c()
     # t()
@@ -251,4 +286,6 @@ if __name__ == '__main__':
     # make_use2()
     # make_use3()
     # make_all_od()
-    make_all_od_4()
+    # make_all_od_4()
+    # del_wrong()
+    take_there_hour()
