@@ -1,4 +1,5 @@
 import time
+import numpy as np
 
 
 def t():
@@ -176,6 +177,46 @@ def cuaclu():
     num = 0
 
 
+def make_var():
+    a = [463, 458, 468, 481, 392, 400, 299, 298, 297, 295]
+    b = [1, 2, 3, 4, 5]
+    print(np.var(a))
+
+
+def make_dic():
+    dic = {}
+    a = [463, 458, 468, 481, 392, 400, 299, 298, 297, 295]
+    for i in range(10):
+        dic[a[i]] = i
+    print(dic)
+
+
+def check_dic():
+    dic = {463: 0, 458: 1, 468: 2, 481: 3, 392: 4, 400: 5, 299: 6, 298: 7, 297: 8, 295: 9}
+    a = [463, 4000]
+    for i in range(2):
+        if i < a[i]:
+            # i = 'b'
+            print('一个')
+        # print(i)
+        # if i in dic:
+        #     print(i, dic[i])
+
+
+def esay_print():
+    a = 1
+    b = a
+
+    for i in range(10):
+        b = i
+        print(b)
+        # if i == 5:
+        #     pass
+        # else:
+        #     print(i)
+
+        # print(i)
+
 
 if __name__ == '__main__':
     # t()
@@ -183,4 +224,28 @@ if __name__ == '__main__':
     # change_time()
     # tes_00()
     # make_all_od_2()
-    cuaclu()
+    # cuaclu()
+    # make_var()
+    # make_dic()
+    # check_dic()
+    esay_print()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

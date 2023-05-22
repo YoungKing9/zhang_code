@@ -16,25 +16,40 @@ def rm_wrong():
             ff.write(i)
 
 
-def take_one_hour():
+def take_one_hour():    #  2471055 2523526 2423170
     path = '/data/WorkMind/data/student/d/Save_data.txt'
-    save_path = '/data/WorkMind/data/student/d/7_8.txt'
+    save_path1 = '/data/WorkMind/data/student/d/one_hour/6_7.txt'
+    save_path2 = '/data/WorkMind/data/student/d/one_hour/7_8.txt'
+    save_path3 = '/data/WorkMind/data/student/d/one_hour/8_9.txt'
+
 
     f = open(path, 'r').readlines()
-    num = 0
+    num1 = 0
+    num2 = 0
+    num3 = 0
     # id = '8617292022147'
-    ff = open(save_path, 'w')
+    ff = open(save_path1, 'w')
+    f2 = open(save_path2, 'w')
+    f3 = open(save_path3, 'w')
+
     for i in f:
         car = i.split(',')
-        if 1569236400 <= int(car[6]) <= 1569240000:
+        if 1569232800 <= int(car[6]) <= 1569236400 and len(car[0]) == 13 and int(car[0]):   # 6-7
             ff.write(i)
-            num += 1
-    print(num)
+            num1 += 1
+        elif 1569236400 <= int(car[6]) <= 1569240000 and len(car[0]) == 13 and int(car[0]):   # this is 7-8
+            f2.write(i)
+            num2 += 1
+        elif 1569240000 <= int(car[6]) <= 1569243600 and len(car[0]) == 13 and int(car[0]):
+            f3.write(i)
+            num3 += 1
+
+    print(num1, num2, num3)
 
 
-def take_there_hour():   # 7417935
+def take_there_hour():   # 7417935    9836201
     path = '/data/WorkMind/data/student/d/Save_data.txt'
-    save_path = '/data/WorkMind/data/student/d/6_9.txt'
+    save_path = '/data/WorkMind/data/student/d/7_8_5.txt'
 
     f = open(path, 'r').readlines()
     num = 0
@@ -43,7 +58,7 @@ def take_there_hour():   # 7417935
     for i in f:
         car = i.split(',')
         #  3600 * 2   = 7200
-        if 1569232800 <= int(car[6]) <= 1569243600:
+        if 1569234600 <= int(car[6]) <= 1569241800:
             ff.write(i)
             num += 1
     print(num)
@@ -206,8 +221,8 @@ def make_all_od():
 
 
 def make_all_od_4():
-    path = '/data/WorkMind/data/student/d/7_8.txt'
-    save_path = '/data/WorkMind/data/student/d/all_od_4.txt'
+    path = '/data/WorkMind/data/student/d/6_10.txt'
+    save_path = '/data/WorkMind/data/student/d/od_6_10.txt'
 
     f = open(path, 'r').readlines()
     ff = open(save_path, 'w')
@@ -230,6 +245,68 @@ def make_all_od_4():
                         car3 = h.split(',')
                         if car[0] == car3[0] and car3[3] != car2[3]:  # 此时下车了，状态是空车，下面无论怎么执行都要break
                             if int(car3[6]) - int(car2[6]) > 300:
+                                timeArray_1 = time.localtime(int(car2[6]))  # 上车的时间
+                                otherStyleTime_1 = time.strftime("%Y-%m-%d %H:%M:%S", timeArray_1)
+                                timeArray_2 = time.localtime(int(car3[6]))  # 下车的时间
+                                otherStyleTime_2 = time.strftime("%Y-%m-%d %H:%M:%S", timeArray_2)
+
+                                od = ''
+                                od += car2[0]
+                                od += ','
+                                od += otherStyleTime_1
+                                od += ','
+                                od += car2[1]
+                                od += ','
+                                od += car2[2]
+                                od += ','
+                                od += otherStyleTime_2
+                                od += ','
+                                od += car3[1]
+                                od += ','
+                                od += car3[2]
+                                print(od, num)
+                                ff.write(f'{od}\n')
+                                num += 1
+                            else:
+                                break  # 这个是
+                            break  # 检测到下车
+                    break  # 检测到上车
+    print('统计完成，总共：', num)
+
+
+def make_od_6_10():
+    path = '/data/WorkMind/data/student/d/6_10.txt'
+    save_path = '/data/WorkMind/data/student/d/od_6_10.txt'
+
+    f = open(path, 'r').readlines()
+    ff = open(save_path, 'w')
+    num = 0
+    # car_list = []  # 汽车列表
+    car_dic = {}   # 数据类型 int
+    for i, k in enumerate(f):
+        # if num < 10:
+        key = i
+        car = k.split(',')
+        if i + 1 >= len(f):
+            break
+        # if (car[0] not in car_list):
+        #     car_list.append(car[0])
+        if int(car[0]) in car_dic and key > car_dic[int(car[0])]:
+            key = car_dic[int(car[0])] + 1    #  ********************** 下午再写
+            k_car = f[key]
+            car = k_car.split(',')
+        if car[3] == '0':  # 此时空车  一辆车只要一次  状态是0
+            for ii, j in enumerate(f[key + 1:]):
+                car2 = j.split(',')
+                if key + ii + 2 >= len(f):
+                    break
+                if car[0] == car2[0] and car2[3] != car[3]:
+                    # 此时上车    状态是-1 载客了，这个时候比较重要,如果下面的不符合直接break   一旦开始载客，就要一直找到下车的时候
+                    for iii, h in enumerate(f[key + ii + 2:]):
+                        car3 = h.split(',')
+                        if car[0] == car3[0] and car3[3] != car2[3]:  # 此时下车了，状态是空车，下面无论怎么执行都要break
+                            if int(car3[6]) - int(car2[6]) > 300:
+                                car_dic[int(car[0])] = int(key + ii + 2 + iii)
                                 timeArray_1 = time.localtime(int(car2[6]))  # 上车的时间
                                 otherStyleTime_1 = time.strftime("%Y-%m-%d %H:%M:%S", timeArray_1)
                                 timeArray_2 = time.localtime(int(car3[6]))  # 下车的时间
@@ -288,4 +365,5 @@ if __name__ == '__main__':
     # make_all_od()
     # make_all_od_4()
     # del_wrong()
-    take_there_hour()
+    take_one_hour()
+    # take_there_hour()

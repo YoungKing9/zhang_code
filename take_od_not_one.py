@@ -14,14 +14,14 @@ def make_od_6_10():
         key = i
         print(i, car_dic, wrong_car)
         car = k.split(',')  # 此时的car 里面的所有数据都是str格式
-        if car in wrong_car:  # 如果在wrong_car 列表里面 就跳过继续
+        if int(car[0]) in wrong_car:  # 如果在wrong_car 列表里面 就跳过继续
             continue
-        if i + 3 > len(f): # 最后3条数据 一个完成的od，一定需要3条数据以上
+        if i + 3 > len(f):  # 最后3条数据 一个完成的od，一定需要3条数据以上
             break
         if int(car[0]) in car_dic and key <= car_dic[int(car[0])]:
             print('有一个')
             continue
-        if car[3] == '0':   # 此时空车  状态是0
+        if car[3] == '0':  # 此时空车  状态是0
             for ii, j in enumerate(f[key + 1:]):  # 同一辆车的第二个点开始找
                 car2 = j.split(',')
                 if car[0] == car2[0] and car2[3] != car[3]:
@@ -31,7 +31,8 @@ def make_od_6_10():
                         if int(key + ii + 2 + iii) >= len(f):
                             wrong_car.append(int(car[0]))  # 已经找到最后一条了还没有找到，此时这辆车就不需要再找了包括下次循环
                             break
-                        if car[0] == car3[0] and car3[3] != car2[3] and int(car3[6]) - int(car2[6]) > 300:  # 此时下车了，状态是空车，下面无论怎么执行都要break
+                        if car[0] == car3[0] and car3[3] != car2[3] and int(car3[6]) - int(
+                                car2[6]) > 300:  # 此时下车了，状态是空车，下面无论怎么执行都要break
                             # if int(car3[6]) - int(car2[6]) > 300:
                             car_dic[int(car[0])] = int(key + ii + 2 + iii)
                             timeArray_1 = time.localtime(int(car2[6]))  # 上车的时间
