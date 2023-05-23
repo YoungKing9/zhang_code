@@ -60,7 +60,7 @@ def make_txt():
     for i, k in enumerate(f):
         f_write.write(k.replace('\n', '') + ' ' + ff[i])
 
-    print(len(f),len(ff))
+    print(len(f), len(ff))
 
 
 def make_not_repeat():
@@ -73,6 +73,7 @@ def make_not_repeat():
         li = ii.split(' ')
         if li[0] != li[1]:
             f_write.write(i)
+
 
 def make_txt_du():
     du = []
@@ -100,12 +101,13 @@ def make_txt_du():
 
     f_write.close()
 
-    print(len(f),len(ff))
+    print(len(f), len(ff))
+
 
 def caclu_leng(dimension):
     # pair数据格式，(latitude, longitude), 纬度和经度， 注意纬度和经度的取值范围
-    Abuja = (dimension[1],dimension[0])
-    Dakar = (dimension[3],dimension[2])
+    Abuja = (dimension[1], dimension[0])
+    Dakar = (dimension[3], dimension[2])
     # Dakar = (39.98919,116.30994)
     lone = round(GD(Abuja, Dakar).km, 3)
     return lone
@@ -122,7 +124,7 @@ def long():
             if li != 0.0:
                 all.append(li)
 
-    print('平均长度为：', sum(all)/len(all))
+    print('平均长度为：', sum(all) / len(all))
 
 
 def average_lone():
@@ -131,7 +133,7 @@ def average_lone():
     all_lone = []
     for i, k in enumerate(f[:-1]):
         dimension = k.replace('\n', '').split(' ')
-        for j in f[i+1:]:
+        for j in f[i + 1:]:
             dimension2 = j.replace('\n', '').split(' ')
             Abuja = (dimension[2], dimension[1])
             Dakar = (dimension2[2], dimension2[1])
@@ -139,25 +141,53 @@ def average_lone():
             lone = round(GD(Abuja, Dakar).km, 3)
             all_lone.append(lone)
 
-    print('平均长度:', sum(all_lone)/len(all_lone))
+    print('平均长度:', sum(all_lone) / len(all_lone))
 
 
 def aggregation_factor():
     path = '../data/od_not_repeat.txt'
     f = open(path, 'r').readlines()
-    li = []
+    all_id = []
     count = []
-    for i, k in enumerate(f[:-1]):
-        point1 = k.split(' ')[0]
-        num = 1
-        take_li = []
-        take_li.append(k.split(' ')[0])
-        for j in f[i+1:]:
-            if i in j.split(' '):
-                num += 1
-                if j.split(' ')[0]
+    for i, k in enumerate(f):
+        ii = k.replace('\n', '').split(' ')
+        for j in ii:
+            if j not in all_id:
+                all_id.append(j)
+
+    for id in all_id:
+        num1 = 0
+        id_list = []
+        for l in f:
+            l_split = l.replace('\n', '').split(' ')
+            if id in l_split:
+                num1 += 1
+                for l_s in l_split:
+                    if l_s not in id_list:
+                        id_list.append(l_s)
+        num2 = 0
+        for m in f:
+            m_split = m.replace('\n', '').split(' ')
+            if m_split[0] in id_list and m_split[1] in id_list:
+                num2 += 1
+
+        juji_index = num1 / num2
+        count.append(juji_index)
+
+    print('聚集系数为：', sum(count) / len(count))
 
 
+# def count_od():
+#     path = '../data/od_not_repeat.txt'
+#     f = open(path, 'r').readlines()
+#     all_id = []
+#     count = []
+#     for i, k in enumerate(f[:-1]):
+#         k_split = k.split(' ')
+#         for j in f[i+1:]:
+
+def in_out():
+    pass
 
 
 if __name__ == '__main__':
@@ -168,23 +198,4 @@ if __name__ == '__main__':
     # caclu_leng()
     # long()
     # average_lone()
-    aggregation_factor()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    aggregation_factor()  # 计算聚集系数
