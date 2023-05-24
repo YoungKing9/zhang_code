@@ -7,27 +7,6 @@ import re
 import shutil
 
 
-def walk_train_list(path, suffix: list):
-    file_list = []
-    suffix = [s.lower() for s in suffix]
-    if not os.path.exists(path):
-        print("not exist path {}".format(path))
-        return []
-
-    if os.path.isfile(path):
-        return [path, ]
-
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            if os.path.splitext(file)[1].lower()[1:] in suffix:
-                file_list.append(os.path.join(root, file))
-
-    try:
-        file_list.sort(key=lambda x: int(re.findall('\d+', os.path.splitext(os.path.basename(x))[0])[0]))
-    except:
-        pass
-    random.shuffle(file_list)
-    return file_list
 
 
 # def makexml(txtPath, xmlPath, picPath):  # txt所在文件夹路径，xml文件保存路径，图片所在文件夹路径
@@ -43,20 +22,21 @@ def makexml(picPath, xmlPath):  # txt所在文件夹路径，xml文件保存路�
     # walk_train_list(picPath)
     files = open(picPath, 'r').readlines()
     # files = os.listdir(txtPath)
-    files = files[93941:]
+    # files = files[93941:]
     print(len(files))
     # num_pic = 140819     93941报错，删除一张
-    num_pic = 93942
+    # num_pic = 93942
+    num_pic = 1
     f_write = open('/data/WorkMind/data/student/zhang_code/data/wrong_pic.txt', 'w')
 
-    for i, name in enumerate(files):
+    for i, name in enumerate(files[:100000]):
         xmlBuilder = Document()
         annotation = xmlBuilder.createElement("annotation")  # 创建annotation标签
         xmlBuilder.appendChild(annotation)
         # txtFile = open(txtPath + name)
         # 把图片复制到 voc下面
         pic_name = num_pic
-        shutil.copy(name.replace('\n', ''), f"/data/VOC/voc2017v3/JPEGImages/{str(num_pic).zfill(6)}.jpg")
+        shutil.copy(name.replace('\n', ''), f"/data/VOC/voc2017_rcnn/VOC2007/JPEGImages/{str(num_pic).zfill(6)}.jpg")
         pic = name.split('JPEGImages')
         cut_num = -4
         txtList = []
@@ -74,12 +54,8 @@ def makexml(picPath, xmlPath):  # txt所在文件夹路径，xml文件保存路�
         name = name.replace('\n', '')
         img = cv2.imread(name)
         # print(txtList)
-        try:
-            Pheight, Pwidth, Pdepth = img.shape
-        except:
-            print("一张错误图片：", name)
-            f_write.write(name + '\n')
-            continue
+        Pheight, Pwidth, Pdepth = img.shape
+
 
 
         folder = xmlBuilder.createElement("folder")  # folder标签
@@ -165,19 +141,10 @@ def makexml(picPath, xmlPath):  # txt所在文件夹路径，xml文件保存路�
             object.appendChild(bndbox)  # bndbox标签结束
 
             annotation.appendChild(object)  # object标签结束
-        # print(name)
-        # save_path = name.split('JPEGImages')[-1]
-        # # print(xmlPath, save_path)
-        # save_paths = xmlPath + save_path.replace(save_path.split('/')[-1], '')
-        # # print(save_paths)
-        # if not os.path.exists(save_paths):
-        #     os.makedirs(save_paths)
 
-        # f = open(save_paths + f"{str(num_pic).zfill(6)}.xml", 'w')
         f = open(xmlPath + f"{str(num_pic).zfill(6)}.xml", 'w')
         xmlBuilder.writexml(f, indent='\t', newl='\n', addindent='\t', encoding='utf-8')
         num_pic += 1
-
         f.close()
     print('图片一共有:', num_pic)
 
@@ -188,6 +155,6 @@ def makexml(picPath, xmlPath):  # txt所在文件夹路径，xml文件保存路�
 if __name__ == "__main__":
     picPath = "/data/VOC/ABBY/darknet/version2.1.18/train.txt"  # 图片所在文件夹路径，后面的/一定要带上  140818
     # txtPath = "/root/autodl-tmp/CrowdHuamn/labels/train/"  # txt所在文件夹路径，后面的/一定要带上
-    xmlPath = "/data/VOC/voc2017v3/Annotations/"  # xml文件保存路径，后面的/一定要带上
+    xmlPath = "/data/VOC/voc2017_rcnn/VOC2007/Annotations/"  # xml文件保存路径，后面的/一定要带上
     # xmlPath = "/data/VOC/voc2017/test/"  # xml文件保存路径，后面的/一定要带上
     makexml(picPath, xmlPath)

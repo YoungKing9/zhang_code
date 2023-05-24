@@ -1,0 +1,25 @@
+def in_out():    #计算流量比
+    path = '../data/od_not_repeat.txt'
+    f = open(path, 'r').readlines()
+    all_id = []   # 不重复，所有的节点
+    count = []    # 计算每个节点的流量比
+    for i, k in enumerate(f):    # 这个循环把所有的节点添加到all_id列表里面
+        ii = k.replace('\n', '').split(' ')
+        for j in ii:
+            if j not in all_id:
+                all_id.append(j)
+
+    for id in all_id:
+        num1 = 0  # 单个节点流入 的数量
+        num2 = 0  # 单个节点流出 的数量
+        for l in f:
+            l_split = l.replace('\n', '').split(' ')
+            if l_split[1] == id:
+                num1 += 1
+            if l_split[0] == id:
+                num2 += 1
+        if num1 != 0 and num2 != 0:
+            id_index = num1 - num2 / num1 + num2
+            count.append(id_index)
+
+    print('流量比为：', sum(count) / len(count))

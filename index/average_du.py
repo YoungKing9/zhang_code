@@ -24,15 +24,15 @@ def points():
     # file1 = open("节点的度.csv", 'w', encoding='utf-8', newline='')  # 创建节点的度.csv文件
     # csv_writer = csv.writer(file1)  # 构建csv写入对象
     # csv_writer.writerow(["节点", "度"])  # 构建列表头
-    count = 0  # 计算节点的个数
-    for key in net:
-        count += 1
+    # count = 0  # 计算节点的个数
+    # for key in net:
+    #     count += 1
         # f = key
         # d = len(net[key])
     #     csv_writer.writerow([f, d])
     # file1.close()
     # 网络平均度
-    print("网络平均度为：{}".format(2 * edge / count))
+    print("网络平均度为：{}".format(2 * edge / len(net)))
 
 
 def calculate_du(edge, net):
@@ -94,7 +94,7 @@ def make_txt_du():
 
     for ii, kk in enumerate(ff):
         if kk not in du:
-            du.append(k)
+            du.append(kk)
             dimention = fff[ii]
             di = dimention.split('\t')
             f_write.write(kk.replace('\n', '') + ' ' + di[2] + ' ' + di[3])
@@ -127,7 +127,7 @@ def long():
     print('平均长度为：', sum(all) / len(all))
 
 
-def average_lone():
+def average_lone():   # 计算任意两个点的距离并且求平均值
     path = '../data/use_du.txt'
     f = open(path, 'r').readlines()
     all_lone = []
@@ -135,67 +135,84 @@ def average_lone():
         dimension = k.replace('\n', '').split(' ')
         for j in f[i + 1:]:
             dimension2 = j.replace('\n', '').split(' ')
-            Abuja = (dimension[2], dimension[1])
-            Dakar = (dimension2[2], dimension2[1])
+            Abuja = (dimension[2], dimension[1])    # 这个是经纬度
+            Dakar = (dimension2[2], dimension2[1])  # 另一个点的经纬度
             # Dakar = (39.98919,116.30994)
-            lone = round(GD(Abuja, Dakar).km, 3)
+            lone = round(GD(Abuja, Dakar).km, 3)     #立功GD库计算两个点的距离
             all_lone.append(lone)
 
     print('平均长度:', sum(all_lone) / len(all_lone))
 
 
-def aggregation_factor():
+def aggregation_factor():    # 计算聚集系数
     path = '../data/od_not_repeat.txt'
     f = open(path, 'r').readlines()
     all_id = []
     count = []
-    for i, k in enumerate(f):
+    for i, k in enumerate(f):  # 这个循环把所有的节点添加到all_id列表里面
+        ii = k.replace('\n', '').split(' ')
+        for j in ii:
+            if j not in all_id:
+                all_id.append(j)
+
+    for id in all_id:   # 计算单个节点的聚集系数
+        num1 = 0        # 单个节点构成的边的数量
+        id_list = []
+        for l in f:     # l 为  213 123
+            l_split = l.replace('\n', '').split(' ')
+            if id in l_split:    # 如果节点在一个节点对里面， num1 就加 1
+                num1 += 1
+                for l_s in l_split:
+                    if l_s not in id_list:
+                        id_list.append(l_s)    # 将所有包含要计算的节点的节点对，元素添加到id_list
+        id_list.remove(id)      # 最后列表面除掉要计算的节点
+        num2 = 0
+        for m in f:
+            m_split = m.replace('\n', '').split(' ')
+            if m_split[0] in id_list and m_split[1] in id_list:  # 如果两个节点都在id_list, 就说明这两个点都和要计算的节点id连接，并且它俩也能连接
+                num2 += 1
+        if num1 != 0 and num2 != 0:
+            juji_index = num2 / num1   # 最后求单个节点的聚集系数
+            count.append(juji_index)
+
+    print('聚集系数为：', sum(count) / len(count))
+
+
+
+def in_out():    #计算流量比
+    path = '../data/od_not_repeat.txt'
+    f = open(path, 'r').readlines()
+    all_id = []   # 不重复，所有的节点
+    count = []    # 计算每个节点的流量比
+    for i, k in enumerate(f):    # 这个循环把所有的节点添加到all_id列表里面
         ii = k.replace('\n', '').split(' ')
         for j in ii:
             if j not in all_id:
                 all_id.append(j)
 
     for id in all_id:
-        num1 = 0
-        id_list = []
+        num1 = 0  # 单个节点流入 的数量
+        num2 = 0  # 单个节点流出 的数量
         for l in f:
             l_split = l.replace('\n', '').split(' ')
-            if id in l_split:
+            if l_split[1] == id:
                 num1 += 1
-                for l_s in l_split:
-                    if l_s not in id_list:
-                        id_list.append(l_s)
-        num2 = 0
-        for m in f:
-            m_split = m.replace('\n', '').split(' ')
-            if m_split[0] in id_list and m_split[1] in id_list:
+            if l_split[0] == id:
                 num2 += 1
+        if num1 != 0 and num2 != 0:
+            id_index = num1 - num2 / num1 + num2
+            count.append(id_index)
 
-        juji_index = num1 / num2
-        count.append(juji_index)
-
-    print('聚集系数为：', sum(count) / len(count))
-
-
-# def count_od():
-#     path = '../data/od_not_repeat.txt'
-#     f = open(path, 'r').readlines()
-#     all_id = []
-#     count = []
-#     for i, k in enumerate(f[:-1]):
-#         k_split = k.split(' ')
-#         for j in f[i+1:]:
-
-def in_out():
-    pass
+    print('流量比为：', sum(count) / len(count))
 
 
 if __name__ == '__main__':
-    # points()
+    # points()   # 计算评论度
     # make_txt()
     # make_not_repeat()
     # make_txt_du()
     # caclu_leng()
     # long()
-    # average_lone()
-    aggregation_factor()  # 计算聚集系数
+    average_lone()    # 计算平均长度
+    # aggregation_factor()  # 计算聚集系数
+    # in_out()  # 计算流量系数

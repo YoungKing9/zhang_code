@@ -1,0 +1,32 @@
+def aggregation_factor():    # 计算聚集系数
+    path = '../data/od_not_repeat.txt'
+    f = open(path, 'r').readlines()
+    all_id = []
+    count = []
+    for i, k in enumerate(f):  # 这个循环把所有的节点添加到all_id列表里面
+        ii = k.replace('\n', '').split(' ')
+        for j in ii:
+            if j not in all_id:
+                all_id.append(j)
+
+    for id in all_id:   # 计算单个节点的聚集系数
+        num1 = 0        # 单个节点构成的边的数量
+        id_list = []
+        for l in f:     # l 为  213 123
+            l_split = l.replace('\n', '').split(' ')
+            if id in l_split:    # 如果节点在一个节点对里面， num1 就加 1
+                num1 += 1
+                for l_s in l_split:
+                    if l_s not in id_list:
+                        id_list.append(l_s)    # 将所有包含要计算的节点的节点对，元素添加到id_list
+        id_list.remove(id)      # 最后列表面除掉要计算的节点
+        num2 = 0
+        for m in f:
+            m_split = m.replace('\n', '').split(' ')
+            if m_split[0] in id_list and m_split[1] in id_list:  # 如果两个节点都在id_list, 就说明这两个点都和要计算的节点id连接，并且它俩也能连接
+                num2 += 1
+        if num1 != 0 and num2 != 0:
+            juji_index = num2 / num1   # 最后求单个节点的聚集系数
+            count.append(juji_index)
+
+    print('聚集系数为：', sum(count) / len(count))

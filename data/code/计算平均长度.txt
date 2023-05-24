@@ -1,0 +1,15 @@
+def average_lone():   # 计算任意两个点的距离并且求平均值
+    path = '../data/use_du.txt'
+    f = open(path, 'r').readlines()
+    all_lone = []
+    for i, k in enumerate(f[:-1]):
+        dimension = k.replace('\n', '').split(' ')
+        for j in f[i + 1:]:
+            dimension2 = j.replace('\n', '').split(' ')
+            Abuja = (dimension[2], dimension[1])    # 这个是经纬度
+            Dakar = (dimension2[2], dimension2[1])  # 另一个点的经纬度
+            # Dakar = (39.98919,116.30994)
+            lone = round(GD(Abuja, Dakar).km, 3)     #立功GD库计算两个点的距离
+            all_lone.append(lone)
+
+    print('平均长度:', sum(all_lone) / len(all_lone))

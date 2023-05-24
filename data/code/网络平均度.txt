@@ -1,0 +1,18 @@
+def points():
+    file = open('../data/od.txt', 'r')  # 打开文件
+    lines = file.readlines()  # 对文件进行逐行读取
+    edge = len(lines)  # 网络边的条数
+    # edge = 0  # 网络边的条数
+    net = dict()  # 创建空字典，value为元组形
+    for line in lines:  # 遍历每行数据
+        whole = line.split()  # 以空格为分隔符，包含 \n
+        k = whole[0]  # 取出每行数据的第一个数
+        if k != whole[1]:
+            tup1 = (whole[1],)  # 取出每行数据的第二个数，存入元组
+            # edge += 1
+            if k not in net:  # 如果字典中不存在与k相同的key，就添加key-value值
+                net[k] = tup1
+            else:  # 如果字典中存在与k相同的key值，就将对于的值添加到value中
+                net[k] = net[k] + tup1
+    file.close()
+    print("网络平均度为：{}".format(2 * edge / len(net)))
