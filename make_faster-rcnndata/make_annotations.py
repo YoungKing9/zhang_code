@@ -29,14 +29,14 @@ def makexml(picPath, xmlPath):  # txt所在文件夹路径，xml文件保存路�
     num_pic = 1
     f_write = open('/data/WorkMind/data/student/zhang_code/data/wrong_pic.txt', 'w')
 
-    for i, name in enumerate(files[:100000]):
+    for i, name in enumerate(files[:90000]):
         xmlBuilder = Document()
         annotation = xmlBuilder.createElement("annotation")  # 创建annotation标签
         xmlBuilder.appendChild(annotation)
         # txtFile = open(txtPath + name)
         # 把图片复制到 voc下面
         pic_name = num_pic
-        shutil.copy(name.replace('\n', ''), f"/data/VOC/voc2017_rcnn/VOC2007/JPEGImages/{str(num_pic).zfill(6)}.jpg")
+        # shutil.copy(name.replace('\n', ''), f"/data/VOC/voc2017_rcnn/VOC2007/JPEGImages/{str(num_pic).zfill(6)}.jpg")
         pic = name.split('JPEGImages')
         cut_num = -4
         txtList = []
@@ -53,7 +53,9 @@ def makexml(picPath, xmlPath):  # txt所在文件夹路径，xml文件保存路�
 
         name = name.replace('\n', '')
         img = cv2.imread(name)
+        cv2.imwrite(f"/data/VOC/voc2017_all/VOC2007/JPEGImages/{str(num_pic).zfill(6)}.jpg", img)
         # print(txtList)
+        print(num_pic)
         Pheight, Pwidth, Pdepth = img.shape
 
 
@@ -155,6 +157,6 @@ def makexml(picPath, xmlPath):  # txt所在文件夹路径，xml文件保存路�
 if __name__ == "__main__":
     picPath = "/data/VOC/ABBY/darknet/version2.1.18/train.txt"  # 图片所在文件夹路径，后面的/一定要带上  140818
     # txtPath = "/root/autodl-tmp/CrowdHuamn/labels/train/"  # txt所在文件夹路径，后面的/一定要带上
-    xmlPath = "/data/VOC/voc2017_rcnn/VOC2007/Annotations/"  # xml文件保存路径，后面的/一定要带上
+    xmlPath = "/data/VOC/voc2017_all/VOC2007/Annotations/"  # xml文件保存路径，后面的/一定要带上
     # xmlPath = "/data/VOC/voc2017/test/"  # xml文件保存路径，后面的/一定要带上
     makexml(picPath, xmlPath)

@@ -10,7 +10,7 @@ import os
 
 if __name__ == '__main__':
     badFilesList = []
-    curDir = '/data/VOC/voc2017/VOC2007/VOC2007/JPEGImages'
+    curDir = '/data/VOC/voc2017_rcnn/VOC2007/JPEGImages'
     for root, dirs, files in os.walk(curDir):  # print(files)
         # check the corrupted file in curDir
         for each in files:
@@ -37,7 +37,7 @@ if __name__ == '__main__':
             print("corrputed files are above----------------------------", "already checked ", len(files))
     # 222=222222222222222222222222
     # pause_=input()
-    path = r"/data/VOC/voc2017/VOC2007/Annotations/"
+    path = r"/data/VOC/voc2017_rcnn/VOC2007/Annotations/"
     Assertion_provoker_y = []
     Assertion_provoker_x = []
     files = os.listdir(path)

@@ -17,9 +17,9 @@ def take_txt():
             num += 1
 
 def make_main():
-    path1 = '/data/VOC/voctest/VOC2007/ImageSets/Main/train.txt'
-    path2 = '/data/VOC/voctest/VOC2007/ImageSets/Main/val.txt'
-    path3 = '/data/VOC/voctest/VOC2007/ImageSets/Main/trainval.txt'
+    path1 = '/data/VOC/voc2017_rcnn/VOC2007/ImageSets/Main/train.txt'
+    path2 = '/data/VOC/voc2017_rcnn/VOC2007/ImageSets/Main/val.txt'
+    path3 = '/data/VOC/voc2017_rcnn/VOC2007/ImageSets/Main/trainval.txt'
     # 29092
     f1 = open(path1, 'w')
     f2 = open(path2, 'w')
@@ -27,21 +27,33 @@ def make_main():
     num1 = 1
     num2 = 1
     num3 = 1
-    for i in range(50000, 79092):
-        if 2000 < num1 <= 3000:    # 测试集合
+    for i in range(1, 45001):
+        if 38000 < num1 <= 45000:    # 测试集合
             f2.write(str(num1).zfill(6) + '\n')
 
-        if 1 <= num2 <= 2000:     # 训练集合
+        if 1 <= num2 <= 38000:     # 训练集合
             f1.write(str(num2).zfill(6) + '\n')
 
-
-        if num3 <= 3000:   # 总的
-            f3.write(str(num3).zfill(6) + '\n')
-            num1 += 1
-            num2 += 1
-            num3 += 1
+        # if num3 <= :   # 总的
+        f3.write(str(i).zfill(6) + '\n')
+        num1 += 1
+        num2 += 1
+        num3 += 1
 
 
 if __name__ == '__main__':
     # take_txt()
     make_main()
+
+
+
+
+
+
+
+
+
+
+
+
+
